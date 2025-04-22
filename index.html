@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pick-a-Number Donation Board</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to top, #cbefff, #ffffff);
+      background-image: url('https://www.transparenttextures.com/patterns/clouds.png');
+      margin: 0;
+      padding: 2rem;
+      text-align: center;
+    }
+    h1 {
+      color: #1a3e5c;
+      margin-bottom: 1rem;
+    }
+    .board {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 10px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .number {
+      position: relative;
+      background-color: #4fc3f7;
+      color: white;
+      font-size: 1.2rem;
+      padding: 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .number:hover {
+      transform: scale(1.05);
+    }
+    .taken {
+      background-color: #90a4ae;
+      color: transparent;
+      pointer-events: none;
+    }
+    .taken::after {
+      content: "\2716";
+      color: red;
+      font-size: 1.5rem;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .footer {
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <h1>✈️ Pick-a-Number Donation Board</h1>
+  <div class="board" id="board"></div>
+
+  <div class="footer">
+    Thank you for helping us soar! ✨<em>Donation links listed below.</em>
+  </div>
+
+  <script>
+    const board = document.getElementById("board");
+    const takenNumbers = JSON.parse(localStorage.getItem("takenNumbers")) || [];
+
+    for (let i = 1; i <= 60; i++) {
+      const div = document.createElement("div");
+      div.className = "number";
+      div.textContent = i;
+
+      if (takenNumbers.includes(i)) {
+        div.classList.add("taken");
+      } else {
+        div.addEventListener("click", () => {
+          if (confirm(`You're picking number $${i}. Confirm your donation?`)) {
+            alert("Thank you! Please complete your donation using the link you'll provide later.");
+
+            takenNumbers.push(i);
+            localStorage.setItem("takenNumbers", JSON.stringify(takenNumbers));
+            div.classList.add("taken");
+          }
+        });
+      }
+
+      board.appendChild(div);
+    }
+  </script>
+</body>
+</html>
